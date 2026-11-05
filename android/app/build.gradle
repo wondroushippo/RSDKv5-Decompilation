@@ -55,6 +55,7 @@ android {
         }
         externalNativeBuild {
             cmake {
+                arguments "-DRETRO_DISABLE_PLUS=OFF", "DRETRO_REVISION=3"
                 path 'jni/CMakeLists.txt'
             }
         }
