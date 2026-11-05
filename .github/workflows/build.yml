@@ -1,7 +1,6 @@
 name: Build RSDKv5 + U
 
 on:
-  push:
   workflow_dispatch: 
     paths:
       - android/**
@@ -25,83 +24,83 @@ env:
   GENERAL_LINUX_FLAGS: ""
 
 jobs:
-  v5-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Install dependencies
-        run: vcpkg install libtheora libogg --triplet=x86-windows-static
-      - name: Build RSDKv5 + U
-        run: |
-          cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}} ${{env.V5_FLAGS}}
-          cmake --build build_v5 --parallel --config Release
-          cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}} ${{env.V5U_FLAGS}}
-          cmake --build build_v5U --parallel --config Release
-      - name: Move artifacts
-        run: |
-          mkdir artifacts
-          mv ./build_*/Release/*.exe ./artifacts
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: v5-windows
-          path: artifacts
-  v5-windows-x64:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Install dependencies
-        run: vcpkg install libtheora libogg --triplet=x64-windows-static
-      - name: Build RSDKv5 + U
-        run: |
-          cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}} ${{env.V5_FLAGS}}
-          cmake --build build_v5 --parallel --config Release
-          cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}} ${{env.V5U_FLAGS}}
-          cmake --build build_v5U --parallel --config Release
-      - name: Move artifacts
-        run: |
-          mkdir artifacts
-          mv ./build_*/Release/*.exe ./artifacts
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: v5-windows-x64
-          path: artifacts
-  v5-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install libogg-dev libtheora-dev libglew-dev libglfw3-dev
-      - name: Build RSDKv5 + U OGL
-        run: |
-          cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_LINUX_FLAGS}} ${{env.V5_FLAGS}}
-          cmake --build build_v5 --parallel
-          cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_LINUX_FLAGS}} ${{env.V5U_FLAGS}}
-          cmake --build build_v5U --parallel
-      # tar the executables so that they don't lose exec permissions
-      # see: https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
-      - name: Move artifacts
-        run: |
-          mkdir artifacts
-          mv ./build_*/RSDKv5* ./artifacts
-          tar -czvf linux.tar.gz -C ./artifacts .
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: v5-linux
-          path: linux.tar.gz
+  # v5-windows:
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: recursive
+  #     - name: Install dependencies
+  #       run: vcpkg install libtheora libogg --triplet=x86-windows-static
+  #     - name: Build RSDKv5 + U
+  #       run: |
+  #         cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}} ${{env.V5_FLAGS}}
+  #         cmake --build build_v5 --parallel --config Release
+  #         cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}} ${{env.V5U_FLAGS}}
+  #         cmake --build build_v5U --parallel --config Release
+  #     - name: Move artifacts
+  #       run: |
+  #         mkdir artifacts
+  #         mv ./build_*/Release/*.exe ./artifacts
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: v5-windows
+  #         path: artifacts
+  # v5-windows-x64:
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: recursive
+  #     - name: Install dependencies
+  #       run: vcpkg install libtheora libogg --triplet=x64-windows-static
+  #     - name: Build RSDKv5 + U
+  #       run: |
+  #         cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}} ${{env.V5_FLAGS}}
+  #         cmake --build build_v5 --parallel --config Release
+  #         cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}} ${{env.V5U_FLAGS}}
+  #         cmake --build build_v5U --parallel --config Release
+  #     - name: Move artifacts
+  #       run: |
+  #         mkdir artifacts
+  #         mv ./build_*/Release/*.exe ./artifacts
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: v5-windows-x64
+  #         path: artifacts
+  # v5-linux:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: recursive
+  #     - name: Install dependencies
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install libogg-dev libtheora-dev libglew-dev libglfw3-dev
+  #     - name: Build RSDKv5 + U OGL
+  #       run: |
+  #         cmake -B build_v5 ${{env.GENERAL_FLAGS}} ${{env.GENERAL_LINUX_FLAGS}} ${{env.V5_FLAGS}}
+  #         cmake --build build_v5 --parallel
+  #         cmake -B build_v5U ${{env.GENERAL_FLAGS}} ${{env.GENERAL_LINUX_FLAGS}} ${{env.V5U_FLAGS}}
+  #         cmake --build build_v5U --parallel
+  #     # tar the executables so that they don't lose exec permissions
+  #     # see: https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
+  #     - name: Move artifacts
+  #       run: |
+  #         mkdir artifacts
+  #         mv ./build_*/RSDKv5* ./artifacts
+  #         tar -czvf linux.tar.gz -C ./artifacts .
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: v5-linux
+  #         path: linux.tar.gz
   v5-android:
     runs-on: ubuntu-latest
     steps:
